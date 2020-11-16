@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 enum DialogAction { yes, abort }
 
 class Dialogs {
+  // Cuadro emergente con entrada de texto para
+  //introducir los productos, realizar busquedas
   static Future<DialogAction> mDialog(
     BuildContext context,
     String title,
@@ -16,7 +18,7 @@ class Dialogs {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
             ),
-            title: Text(title),
+            title: Text(title), //titulo dinamico: buscar o agregar
             content: TextField(
               controller: producTxt,
               maxLength: 10,
@@ -53,6 +55,8 @@ class Dialogs {
     return (action != null) ? action : DialogAction.abort;
   }
 
+  //Ventana emergente para controlar la cantidad de productos
+  // requeridos
   static Future<DialogAction> cDialog(
     BuildContext context,
     String title,
@@ -65,7 +69,7 @@ class Dialogs {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
             ),
-            title: Text(title),
+            title: Text(title), //titulo : Cantidad
             content: TextField(
               keyboardType: TextInputType.phone,
               controller: cantidadProducto,
@@ -97,6 +101,7 @@ class Dialogs {
     return (action != null) ? action : DialogAction.abort;
   }
 
+  //Ventana emergente para limpiar la lista de articulos
   static Future<DialogAction> vDialog(
     BuildContext context,
     String title,

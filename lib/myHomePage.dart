@@ -11,11 +11,20 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
+/*
+clase que se encarga de mostrar los widgets de las paginas
+*/
 class _MyHomePageState extends State<MyHomePage> {
   double largo;
   double ancho;
   int selectDrawerItem = 0;
 
+  /*
+  Funcion que recibe el indice de la pagina para redibujar la pantalla con
+  la clase seleccionada.
+  Se pasa tambien las dimensiones (ancho y largo) de la pantalla del dispositivo
+  para mantener cierta estetica
+  */
   getDrawerItem(pos, ancho, largo) {
     switch (pos) {
       case 0:
@@ -30,6 +39,9 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+/*Metodo que se encarga de actualizar el widget para mostrarlo en pantalla
+en este caso el widget que se redibuja es el body de la app.
+ */
   void onSelectItem(pos) {
     setState(() {
       Navigator.of(context).pop();
@@ -76,28 +88,32 @@ class _MyHomePageState extends State<MyHomePage> {
                 title: Text("Home"),
                 leading: Icon(Icons.home),
                 onTap: () {
-                  onSelectItem(0);
+                  onSelectItem(0); //indice de la pagina para la pantalla Home
                 },
               ),
               ListTile(
                 title: Text("Productos"),
                 leading: Icon(Icons.add_box),
                 onTap: () {
-                  onSelectItem(1);
+                  onSelectItem(
+                      1); //indice de la pagina para la pantalla Productos
                 },
               ),
               ListTile(
                 title: Text("Descuentos"),
                 leading: Icon(Icons.add_box),
                 onTap: () {
-                  onSelectItem(2);
+                  onSelectItem(
+                      2); //indice de la pagina para la pantalla Descuentos
                 },
               ),
             ],
           ),
         ),
       ),
-      body: getDrawerItem(selectDrawerItem, ancho, largo),
+      body:
+          getDrawerItem(selectDrawerItem, ancho, largo), //llamada a la funcion
+      //getDrawerItem que devuelve un widget el cual es mostrado como la pantalla principal en el stack
     );
   }
 }
