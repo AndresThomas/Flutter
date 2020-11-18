@@ -14,6 +14,8 @@ class MyHomePage extends StatefulWidget {
 /*
 clase que se encarga de mostrar los widgets de las paginas
 */
+//dataBase db = dataBase();
+
 class _MyHomePageState extends State<MyHomePage> {
   double largo;
   double ancho;
@@ -55,65 +57,65 @@ en este caso el widget que se redibuja es el body de la app.
     largo = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      drawer: Container(
-        width: ancho / 1.25,
-        child: Drawer(
-          child: ListView(
-            children: <Widget>[
-              DrawerHeader(
-                decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                        colors: <Color>[Colors.blue, Colors.lightBlue])),
-                child: Column(
-                  children: <Widget>[
-                    Material(
-                      elevation: 10,
-                      borderRadius: BorderRadius.all(Radius.circular(50.0)),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Image.asset(
-                          "lib/img/img.jpg",
-                          width: 80,
-                          height: 80,
+        appBar: AppBar(
+          title: Text(widget.title),
+        ),
+        drawer: Container(
+          width: ancho / 1.25,
+          child: Drawer(
+            child: ListView(
+              children: <Widget>[
+                DrawerHeader(
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                          colors: <Color>[Colors.blue, Colors.lightBlue])),
+                  child: Column(
+                    children: <Widget>[
+                      Material(
+                        elevation: 10,
+                        borderRadius: BorderRadius.all(Radius.circular(50.0)),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Image.asset(
+                            "lib/img/img.jpg",
+                            width: 80,
+                            height: 80,
+                          ),
                         ),
-                      ),
-                    )
-                  ],
+                      )
+                    ],
+                  ),
                 ),
-              ),
-              ListTile(
-                title: Text("Home"),
-                leading: Icon(Icons.home),
-                onTap: () {
-                  onSelectItem(0); //indice de la pagina para la pantalla Home
-                },
-              ),
-              ListTile(
-                title: Text("Productos"),
-                leading: Icon(Icons.add_box),
-                onTap: () {
-                  onSelectItem(
-                      1); //indice de la pagina para la pantalla Productos
-                },
-              ),
-              ListTile(
-                title: Text("Descuentos"),
-                leading: Icon(Icons.add_box),
-                onTap: () {
-                  onSelectItem(
-                      2); //indice de la pagina para la pantalla Descuentos
-                },
-              ),
-            ],
+                ListTile(
+                  title: Text("Home"),
+                  leading: Icon(Icons.home),
+                  onTap: () {
+                    onSelectItem(0); //indice de la pagina para la pantalla Home
+                  },
+                ),
+                ListTile(
+                  title: Text("Productos"),
+                  leading: Icon(Icons.add_box),
+                  onTap: () {
+                    onSelectItem(
+                        1); //indice de la pagina para la pantalla Productos
+                  },
+                ),
+                ListTile(
+                  title: Text("Descuentos"),
+                  leading: Icon(Icons.add_box),
+                  onTap: () {
+                    onSelectItem(
+                        2); //indice de la pagina para la pantalla Descuentos
+                  },
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-      body:
-          getDrawerItem(selectDrawerItem, ancho, largo), //llamada a la funcion
-      //getDrawerItem que devuelve un widget el cual es mostrado como la pantalla principal en el stack
-    );
+        body:
+            getDrawerItem(selectDrawerItem, ancho, largo) //llamada a la funcion
+        //getDrawerItem que devuelve un widget el cual es mostrado
+        );
   }
 }

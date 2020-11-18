@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
+import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
+
+import 'headTable.dart';
 import 'dialogs.dart';
 
 var producTxt = TextEditingController();
@@ -24,18 +29,6 @@ class _homeScreenState extends State<homeScreen> {
     print("vaciando");
     setState(() {
       myItems.clear();
-    });
-  }
-
-  onTapCotizar() {
-    setState(() {
-      /*double total = 0;
-      if (myItems.isNotEmpty) {
-        for (var item in myItems) {
-          total += item.precioTotal;
-        }
-      }
-      print("El monto total es:$total");*/
     });
   }
 
@@ -133,7 +126,6 @@ class _homeScreenState extends State<homeScreen> {
                       mKey: 3, //id del boton
                       mColor: Colors.green,
                       context: context,
-                      onBotonChange: onTapCotizar(),
                     ),
                   ),
                 ],
@@ -144,43 +136,6 @@ class _homeScreenState extends State<homeScreen> {
       ),
     );
   }
-}
-
-//Widget cabecera de la tabla de articulos, en la cual se
-// encuentra la cantidad de productos, el folio , precio por unidad
-//y el total por el/los articulo/los
-
-Widget headTable() {
-  return DataTable(
-    columnSpacing: 15,
-    columns: const <DataColumn>[
-      DataColumn(
-        label: Text(
-          'Cantidad',
-          style: TextStyle(fontStyle: FontStyle.italic, color: Colors.white),
-        ),
-      ),
-      DataColumn(
-        label: Text(
-          'Folio',
-          style: TextStyle(fontStyle: FontStyle.italic, color: Colors.white),
-        ),
-      ),
-      DataColumn(
-        label: Text(
-          'PrecioU.',
-          style: TextStyle(fontStyle: FontStyle.italic, color: Colors.white),
-        ),
-      ),
-      DataColumn(
-        label: Text(
-          'PrecioT.',
-          style: TextStyle(fontStyle: FontStyle.italic, color: Colors.white),
-        ),
-      ),
-    ],
-    rows: <DataRow>[],
-  );
 }
 
 //Widget fila
@@ -197,6 +152,7 @@ class rowItem extends StatelessWidget {
   );
   @override
   Widget build(BuildContext context) {
+    print("creadon row item");
     this.precioTotal = this.precioUnitario * this.cantidad;
     return Container(
         decoration: BoxDecoration(
@@ -370,16 +326,16 @@ void handleCantidad(
 
 // metodo de control para saber que boton ha desatado un evento
 void handleButton(mKey) {
+  print("id:$mKey");
   //El boton busqueda desata un evento
   if (mKey == 0) {
     print("buscar");
+    producTxt.clear();
   }
   //El boton vaciar desata un evento
   if (mKey == 1) {
     print("Vaciar");
-    print(myItems.length);
     myItems.clear(); //vacia la lista de items
-    print(myItems.length);
   }
   //El boton agregar ha desatado un evento
   if (mKey == 2) {
