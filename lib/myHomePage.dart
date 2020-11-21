@@ -36,7 +36,10 @@ class _MyHomePageState extends State<MyHomePage> {
         return productScreen(ancho, largo);
         break;
       case 2:
-        return discountScreen(ancho, largo);
+        return discountScreen(
+          ancho: ancho,
+          largo: largo,
+        );
         break;
     }
   }

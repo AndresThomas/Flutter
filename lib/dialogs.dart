@@ -1,3 +1,4 @@
+import 'package:cotiza/descuentoClass.dart';
 import 'package:cotiza/homeScreen.dart';
 import 'package:cotiza/productClass.dart';
 import 'package:cotiza/productScreen.dart';
@@ -304,6 +305,115 @@ class Dialogs {
     return action;
   }
 
+  static Future<DialogAction> addDialog2(BuildContext context, String title,
+      final GlobalKey<FormState> formKey) async {
+    var descuentoTxt = TextEditingController();
+    var valor = TextEditingController();
+
+    bool state = false;
+
+    var action = await showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            title: Text(title), //titulo dinamico: buscar o agregar
+            content: Container(
+              height: 150,
+              child: Form(
+                key: formKey,
+                child: ListView(
+                  children: [
+                    TextFormField(
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return "Ingrese el nombre";
+                        }
+                        return null;
+                      },
+                      controller: descuentoTxt,
+                      maxLength: 10,
+                      style: TextStyle(
+                        color: Colors.black,
+                      ),
+                      decoration: InputDecoration(
+                          hintText: "Nombre",
+                          hintStyle: TextStyle(
+                            color: Colors.black,
+                          ),
+                          alignLabelWithHint: true),
+                    ),
+                    TextFormField(
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return "Ingrese el valor";
+                        }
+                        return null;
+                      },
+                      controller: valor,
+                      maxLength: 10,
+                      keyboardType: TextInputType.number,
+                      style: TextStyle(
+                        color: Colors.black,
+                      ),
+                      decoration: InputDecoration(
+                          hintText: "Valor",
+                          hintStyle: TextStyle(
+                            color: Colors.black,
+                          ),
+                          alignLabelWithHint: true),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text("Cancelar"),
+              ),
+              RaisedButton(
+                onPressed: () {
+                  if (formKey.currentState.validate()) {
+                    print("Guardando");
+                    Descuento descuento = new Descuento(
+                      descuento: descuentoTxt.text,
+                      valor: double.parse(valor.text),
+                    );
+                    Operation.insert2(descuento);
+                    state = true;
+                  }
+                  Navigator.of(context).pop();
+                },
+                child: const Text("Aceptar"),
+              ),
+              RaisedButton(
+                onPressed: () {
+                  if (formKey.currentState.validate()) {
+                    print("Guardando");
+                    Descuento descuento = new Descuento(
+                      descuento: descuentoTxt.text,
+                      valor: double.parse(valor.text),
+                    );
+                    Operation.insert2(descuento);
+                    state = true;
+                  }
+                },
+                child: const Text("Agregar"),
+              ),
+            ],
+          );
+        });
+    if (state)
+      action = DialogAction.yes;
+    else
+      action = DialogAction.no;
+    return action;
+  }
+
   static Future<DialogAction> sDialog(
     BuildContext context,
     String title,
@@ -339,6 +449,7 @@ class Dialogs {
                 onPressed: () {
                   Navigator.of(context).pop();
                   Operation.clean();
+                  Operation.clean2();
                 },
                 child: const Text("Aceptar"),
               ),

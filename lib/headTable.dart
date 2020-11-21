@@ -77,3 +77,34 @@ class ProductheadTable extends StatelessWidget {
     );
   }
 }
+
+class DiscounheadTable extends StatelessWidget {
+  DiscounheadTable();
+  @override
+  Widget build(BuildContext context) {
+    return DataTable(
+      columnSpacing: 26.0,
+      columns: const <DataColumn>[
+        DataColumn(
+          label: Text(
+            'Id',
+            style: TextStyle(fontStyle: FontStyle.italic, color: Colors.white),
+          ),
+        ),
+        DataColumn(
+          label: Text(
+            'Descuento',
+            style: TextStyle(fontStyle: FontStyle.italic, color: Colors.white),
+          ),
+        ),
+        DataColumn(
+          label: Text(
+            'Valor.',
+            style: TextStyle(fontStyle: FontStyle.italic, color: Colors.white),
+          ),
+        ),
+      ],
+      rows: <DataRow>[],
+    );
+  }
+}
