@@ -522,7 +522,7 @@ class Dialogs {
                 itemBuilder: (BuildContext context, int index) {
                   return Container(
                       //color: Colors.transparent,
-                      width: 200,
+                      width: 300,
                       child: Column(
                         children: [
                           rowProduct(

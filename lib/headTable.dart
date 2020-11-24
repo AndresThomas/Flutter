@@ -50,25 +50,25 @@ class ProductheadTable extends StatelessWidget {
       columns: const <DataColumn>[
         DataColumn(
           label: Text(
+            'Stack',
+            style: TextStyle(fontStyle: FontStyle.italic, color: Colors.white),
+          ),
+        ),
+        DataColumn(
+          label: Text(
             'Folio',
             style: TextStyle(fontStyle: FontStyle.italic, color: Colors.white),
           ),
         ),
         DataColumn(
           label: Text(
-            'Costo',
+            'Costo.',
             style: TextStyle(fontStyle: FontStyle.italic, color: Colors.white),
           ),
         ),
         DataColumn(
           label: Text(
             'Descripcion.',
-            style: TextStyle(fontStyle: FontStyle.italic, color: Colors.white),
-          ),
-        ),
-        DataColumn(
-          label: Text(
-            'Cantidad.',
             style: TextStyle(fontStyle: FontStyle.italic, color: Colors.white),
           ),
         ),

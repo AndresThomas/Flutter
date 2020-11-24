@@ -30,7 +30,6 @@ class _homeScreenState extends State<homeScreen> {
   //Funcion para vaciar la lista de articulos
   //previamente agregados
   void onTapVaciar() {
-    print("vaciando");
     setState(() {
       myItems.clear();
       myItems2.clear();
@@ -88,6 +87,7 @@ class _homeScreenState extends State<homeScreen> {
                       typeView: 0,
                       cantidad: myItems[position].cantidad,
                       product: myItems[position],
+                      fontColor: Colors.white,
                     ),
                   );
                 },
@@ -186,7 +186,6 @@ class boton extends StatelessWidget {
         //cuando el id es 1 es porque el usuario desea vaciar la lista de articulos
         if (mKey == 1) {
           final action = await Dialogs.vDialog(context, text);
-          print("action:$action");
           //metodo para llamar el metodo setState y repintar el widget principal
           //ya que ha sido modificado
           onBotonChange();

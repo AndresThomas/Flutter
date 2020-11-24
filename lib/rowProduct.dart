@@ -54,7 +54,7 @@ class rowProduct extends StatelessWidget {
                   }
                 },
                 onTap: () {
-                  print(this.product.folio);
+                  //print(this.product.folio);
                   Dialogs.detailDialog(context: context, product: this.product);
                 },
                 child: Container(
@@ -64,7 +64,7 @@ class rowProduct extends StatelessWidget {
                       children: [
                         Container(
                           height: 40,
-                          width: 70,
+                          width: 120,
                           //color: Colors.brown,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -72,12 +72,12 @@ class rowProduct extends StatelessWidget {
                             children: [
                               Container(
                                 height: 40,
-                                width: 70,
+                                width: 200,
                                 //color: Colors.cyan,
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Text(
-                                    product.folio,
+                                    "Folio:" + product.folio,
                                     style: TextStyle(
                                         color: fontColor, fontSize: 20),
                                   ),
@@ -95,9 +95,33 @@ class rowProduct extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                product.costo.toString(),
+                                "\$:" + product.costo.toString(),
                                 style:
                                     TextStyle(color: fontColor, fontSize: 20),
+                              )
+                            ],
+                          ),
+                        ),
+                        Container(
+                          height: 40,
+                          width: 120,
+                          //color: Colors.brown,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                height: 40,
+                                width: 120,
+                                //color: Colors.cyan,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    "Des.:" + product.descripcion,
+                                    style: TextStyle(
+                                        color: fontColor, fontSize: 20),
+                                  ),
+                                ),
                               )
                             ],
                           ),
@@ -110,33 +134,11 @@ class rowProduct extends StatelessWidget {
                             children: [
                               Container(
                                   height: 30,
-                                  width: 70,
-                                  //boton en el cual esta expresada la cantidad del articulo
-                                  child: Padding(
-                                    padding:
-                                        const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                                    child: Text(
-                                      product.descripcion,
-                                      style: TextStyle(
-                                          color: fontColor, fontSize: 20),
-                                    ),
-                                  )),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          //color: Colors.amber,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                  height: 30,
-                                  width: 70,
+                                  width: 120,
                                   //boton en el cual esta expresada la cantidad del articulo
                                   child: Center(
                                     child: Text(
-                                      product.cantidad.toString(),
+                                      "Stack:" + product.cantidad.toString(),
                                       style: TextStyle(
                                           color: fontColor, fontSize: 20),
                                     ),
@@ -150,6 +152,7 @@ class rowProduct extends StatelessWidget {
             ],
           ));
     } else {
+      print("hi wolrd");
       return Container(
           width: this.sizeContainer,
           height: this.size2,
@@ -160,21 +163,15 @@ class rowProduct extends StatelessWidget {
               InkWell(
                 splashColor: Colors.white,
                 onLongPress: () {
-                  print(this.product.toMap());
+                  /*print(this.product.toMap());
                   if (windowKey == 0) {
                     print("add to car");
-                    handleButton(mKey: 2, product: this.product);
+                    // handleButton(mKey: 2, product: this.product);
                     //myItems.add(this.product);
-                  } else {
-                    final action = Dialogs.updateDialog(
-                        formKey: formKey,
-                        context: context,
-                        title: "Actualizar",
-                        product: this.product);
-                  }
+                  }*/
                 },
                 onTap: () {
-                  print(this.product.folio);
+                  //print(this.product.folio);
                   Dialogs.detailDialog(context: context, product: this.product);
                 },
                 child: Container(
@@ -234,28 +231,6 @@ class rowProduct extends StatelessWidget {
                                 style:
                                     TextStyle(color: fontColor, fontSize: 20),
                               )
-                            ],
-                          ),
-                        ),
-                        Container(
-                          //color: Colors.amber,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                  height: 30,
-                                  width: 70,
-                                  //boton en el cual esta expresada la cantidad del articulo
-                                  child: Padding(
-                                    padding:
-                                        const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                                    child: Text(
-                                      product.descripcion,
-                                      style: TextStyle(
-                                          color: fontColor, fontSize: 20),
-                                    ),
-                                  )),
                             ],
                           ),
                         ),

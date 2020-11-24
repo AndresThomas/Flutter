@@ -31,7 +31,7 @@ class productScreenState extends State<productScreen> {
       results = query;
     });
     results.forEach((element) {
-      print(element.id.toString() + ":" + element.folio);
+      //print(element.id.toString() + ":" + element.folio);
     });
   }
 
@@ -90,7 +90,7 @@ class productScreenState extends State<productScreen> {
                             ),
                             //metodo para borrar por deslizamiento
                             onDismissed: (direction) {
-                              print("id:" + results[position].id.toString());
+                              //print("id:" + results[position].id.toString());
                               Operation.delete(results[position]);
 
                               results.removeAt(position);
@@ -98,6 +98,8 @@ class productScreenState extends State<productScreen> {
                             //widget fila, el cual muestra la informacion del articulo
                             child: rowProduct(
                               product: results[position],
+                              fontColor: Colors.white,
+                              typeView: 0,
                             ),
                           );
                         },
@@ -174,7 +176,7 @@ class boton extends StatelessWidget {
         if (mKey == 0) {
           final action = await Dialogs.sDialog(
               context: context, title: text, formKey: formKey, idScreen: 1);
-          print(action);
+          //print(action);
         } else {
           final action = await Dialogs.addDialog(context, text, formKey);
           onBotonChange();
