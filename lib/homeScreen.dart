@@ -12,9 +12,11 @@ var producTxt = TextEditingController();
 var cantidadProducto = TextEditingController();
 String productName = "";
 List<Product> myItems = [];
+int windowKey = 0;
 
 class homeScreen extends StatefulWidget {
   double ancho, largo;
+
   homeScreen(this.ancho, this.largo, {Key key}) : super(key: key);
 
   @override
@@ -88,6 +90,7 @@ class _homeScreenState extends State<homeScreen> {
                       cantidad: myItems[position].cantidad,
                       product: myItems[position],
                       fontColor: Colors.white,
+                      windowKey: windowKey,
                     ),
                   );
                 },

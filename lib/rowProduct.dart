@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'dialogs.dart';
 import 'homeScreen.dart';
+import 'operation.dart';
 import 'productClass.dart';
 
 class rowProduct extends StatelessWidget {
@@ -38,7 +39,7 @@ class rowProduct extends StatelessWidget {
                   print(this.product.toMap());
                   if (windowKey == 0 && typeView == 3) {
                     print("add to car");
-                    //this.product.cantidad = 1;
+                    this.product.cantidad = 1;
                     handleButton(
                         mKey: 2,
                         product: this.product,
@@ -151,8 +152,11 @@ class rowProduct extends StatelessWidget {
               ),
             ],
           ));
-    } else {
+    }
+    if (windowKey == 0) {
       print("hi wolrd");
+      print(windowKey);
+      double total = product.costo * product.cantidad;
       return Container(
           width: this.sizeContainer,
           height: this.size2,
@@ -246,7 +250,117 @@ class rowProduct extends StatelessWidget {
                                   //boton en el cual esta expresada la cantidad del articulo
                                   child: Center(
                                     child: Text(
-                                      product.cantidad.toString(),
+                                      total.toString(),
+                                      style: TextStyle(
+                                          color: fontColor, fontSize: 20),
+                                    ),
+                                  )),
+                            ],
+                          ),
+                        ),
+                      ]),
+                ),
+              ),
+            ],
+          ));
+    } else {
+      return Container(
+          width: this.sizeContainer,
+          height: this.size2,
+          decoration: BoxDecoration(
+              border: Border(bottom: BorderSide(color: Colors.grey))),
+          child: Column(
+            children: [
+              InkWell(
+                splashColor: Colors.white,
+                onLongPress: () {
+                  /*print(this.product.toMap());
+                  if (windowKey == 0) {
+                    print("add to car");
+                    // handleButton(mKey: 2, product: this.product);
+                    //myItems.add(this.product);
+                  }*/
+                },
+                onTap: () {
+                  //print(this.product.folio);
+                  Dialogs.detailDialog(context: context, product: this.product);
+                },
+                child: Container(
+                  height: 40,
+                  child: ListView(scrollDirection: Axis.horizontal,
+                      //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Container(
+                            height: 30,
+                            width: 70,
+                            //boton en el cual esta expresada la cantidad del articulo
+                            child: FloatingActionButton(
+                              onPressed: () async {
+                                //llamada al metodo para actualizar la cantidad
+                                Dialogs.updateDialog(
+                                    context: context,
+                                    formKey: formKey,
+                                    product: this.product,
+                                    title: "Actualizar");
+                                Operation.update(this.product);
+                              },
+                              child: Text(
+                                product.cantidad.toString(),
+                              ),
+                            )),
+                        Container(
+                          height: 40,
+                          width: 70,
+                          //color: Colors.brown,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                height: 40,
+                                width: 70,
+                                //color: Colors.cyan,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    product.folio,
+                                    style: TextStyle(
+                                        color: fontColor, fontSize: 20),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        Container(
+                          height: 40,
+                          width: 70,
+                          //color: Colors.lime,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                product.costo.toString(),
+                                style:
+                                    TextStyle(color: fontColor, fontSize: 20),
+                              )
+                            ],
+                          ),
+                        ),
+                        Container(
+                          //color: Colors.amber,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                  height: 30,
+                                  width: 70,
+                                  //boton en el cual esta expresada la cantidad del articulo
+                                  child: Center(
+                                    child: Text(
+                                      product.descripcion,
                                       style: TextStyle(
                                           color: fontColor, fontSize: 20),
                                     ),
