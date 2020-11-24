@@ -1,3 +1,5 @@
+import 'package:cotiza/productClass.dart';
+import 'package:cotiza/rowProduct.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:path/path.dart';
@@ -9,7 +11,7 @@ import 'dialogs.dart';
 var producTxt = TextEditingController();
 var cantidadProducto = TextEditingController();
 String productName = "";
-List<rowItem> myItems = [];
+List<Product> myItems = [];
 
 class homeScreen extends StatefulWidget {
   double ancho, largo;
@@ -21,6 +23,8 @@ class homeScreen extends StatefulWidget {
 
 class _homeScreenState extends State<homeScreen> {
   double ancho, largo;
+  List<Product> myItems2 = [];
+  final formKey = GlobalKey<FormState>();
   _homeScreenState(this.ancho, this.largo);
 
   //Funcion para vaciar la lista de articulos
@@ -29,13 +33,25 @@ class _homeScreenState extends State<homeScreen> {
     print("vaciando");
     setState(() {
       myItems.clear();
+      myItems2.clear();
     });
+  }
+
+  loadData() {
+    setState(() {
+      myItems2 = myItems;
+    });
+  }
+
+  @override
+  void initState() {
+    loadData();
+    super.initState();
   }
 
   //Widget principal
   @override
   Widget build(BuildContext context) {
-    print("largo:$largo");
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
@@ -68,10 +84,10 @@ class _homeScreenState extends State<homeScreen> {
                       myItems.removeAt(position);
                     },
                     //widget fila, el cual muestra la informacion del articulo
-                    child: rowItem(
-                      myItems[position].cantidad,
-                      myItems[position].folio,
-                      myItems[position].precioUnitario,
+                    child: rowProduct(
+                      typeView: 0,
+                      cantidad: myItems[position].cantidad,
+                      product: myItems[position],
                     ),
                   );
                 },
@@ -93,6 +109,7 @@ class _homeScreenState extends State<homeScreen> {
                       mColor: Colors.amber,
                       mKey: 0, //id del boton
                       context: context,
+                      formKey: formKey,
                     ),
                   ),
                   //Boton vaciar
@@ -138,123 +155,6 @@ class _homeScreenState extends State<homeScreen> {
   }
 }
 
-//Widget fila
-class rowItem extends StatelessWidget {
-  int cantidad;
-  String folio;
-  double precioUnitario;
-  double precioTotal;
-
-  rowItem(
-    this.cantidad,
-    this.folio,
-    this.precioUnitario,
-  );
-  @override
-  Widget build(BuildContext context) {
-    print("creadon row item");
-    this.precioTotal = this.precioUnitario * this.cantidad;
-    return Container(
-        decoration: BoxDecoration(
-            border: Border(bottom: BorderSide(color: Colors.grey))),
-        child: Column(
-          children: [
-            InkWell(
-              splashColor: Colors.white,
-              onTap: () {},
-              child: Container(
-                height: 40,
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Container(
-                        color: Colors.amber,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                                height: 30,
-                                width: 70,
-                                //boton en el cual esta expresada la cantidad del articulo
-                                child: FloatingActionButton(
-                                  onPressed: () async {
-                                    final action = await Dialogs.cDialog(
-                                      context,
-                                      "Cantidad",
-                                    );
-                                    //llamada al metodo para actualizar la cantidad
-                                    handleCantidad(folio, cantidad);
-                                  },
-                                  child: Text(cantidad.toString()),
-                                )),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        height: 40,
-                        width: 70,
-                        color: Colors.brown,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              height: 40,
-                              width: 70,
-                              color: Colors.cyan,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  folio,
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 20),
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      Container(
-                        height: 40,
-                        width: 70,
-                        color: Colors.lime,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              precioUnitario.toString(),
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 20),
-                            )
-                          ],
-                        ),
-                      ),
-                      Container(
-                        height: 40,
-                        width: 70,
-                        color: Colors.amber,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              precioTotal.toString(),
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 20),
-                            )
-                          ],
-                        ),
-                      ),
-                    ]),
-              ),
-            ),
-          ],
-        ));
-  }
-}
-
 //widget boton
 class boton extends StatelessWidget {
   final String text;
@@ -262,14 +162,15 @@ class boton extends StatelessWidget {
   final int mKey;
   final Color mColor;
   final Function() onBotonChange;
+  final GlobalKey<FormState> formKey;
 
-  boton({
-    this.text,
-    this.mKey,
-    this.mColor,
-    this.context,
-    this.onBotonChange,
-  });
+  boton(
+      {this.text,
+      this.mKey,
+      this.mColor,
+      this.context,
+      this.onBotonChange,
+      this.formKey});
 
   @override
   Widget build(BuildContext context) {
@@ -290,14 +191,16 @@ class boton extends StatelessWidget {
           //ya que ha sido modificado
           onBotonChange();
         }
-        if (mKey == 0 || mKey == 2) {
-          final action = await Dialogs.mDialog(
-            context,
-            text,
-          );
+        if (mKey == 0) {
+          final action = await Dialogs.sDialog(
+              context: context, title: text, formKey: formKey, idScreen: 0);
+          print("action search:$action");
+        }
+        if (mKey == 2) {
+          final action = await Dialogs.mDialog(context, text);
         }
 
-        handleButton(mKey);
+        handleButton(mKey: mKey);
       },
     );
   }
@@ -325,72 +228,72 @@ void handleCantidad(
 }
 
 // metodo de control para saber que boton ha desatado un evento
-void handleButton(mKey) {
-  print("id:$mKey");
-  //El boton busqueda desata un evento
-  if (mKey == 0) {
-    print("buscar");
-    producTxt.clear();
-  }
-  //El boton vaciar desata un evento
-  if (mKey == 1) {
-    print("Vaciar");
-    myItems.clear(); //vacia la lista de items
-  }
-  //El boton agregar ha desatado un evento
-  if (mKey == 2) {
-    print("Agregar");
-    // se verifica que la cadena recibida no sea null
-    if (producTxt.text.isNotEmpty) {
-      productName = producTxt.text;
-      //verificacion que el articulo no este en lista
+void handleButton({int mKey, Product product, int idScreen, int dialogCall}) {
+  print("Handle button");
+  print("idScreen:$idScreen");
+  if (idScreen == 0) {
+    if (mKey == 0) {
+      print("buscar");
+      producTxt.clear();
+    }
+    //El boton vaciar desata un evento
+    if (mKey == 1) {
+      myItems.clear(); //vacia la lista de items
+    }
+    //El boton agregar ha desatado un evento
+    if (mKey == 2) {
+      if (dialogCall == 1) {
+        print("add product");
+        myItems.add(product);
+      }
 
-      if (myItems.isEmpty) {
-        myItems.add(rowItem(
-          1,
-          productName,
-          25.0,
-        ));
-      } else {
-        List<String> folios = [];
+      // se verifica que la cadena recibida no sea null
+      if (producTxt.text.isNotEmpty) {
+        productName = producTxt.text;
+        //verificacion que el articulo no este en lista
 
-        /*
+        if (myItems.isEmpty) {
+          ///sdfdsf,
+          ///,
+          print("empty");
+        } else {
+          List<String> folios = [];
+
+          /*
         realizamos un listado de folios, para despues analizar si dentro de la
         lista existe un folio similar o no, para asi realizar la operacion correspondiente
         */
-        for (var item in myItems) {
-          folios.add(item.folio.toLowerCase());
+          for (var item in myItems) {
+            folios.add(item.folio.toLowerCase());
+          }
+          //si el folio esta en la lista de folios, procedemos a aumentar la cantidad en 1
+          if (folios.contains(productName.toLowerCase())) {
+            myItems.forEach((element) {
+              if (element.folio.compareTo(productName) == 0)
+                element.cantidad += 1;
+            });
+          }
+          //caso contrario añadimos el nuevo elemento
+          else {
+            //
+            print("not empty and");
+          }
         }
-        //si el folio esta en la lista de folios, procedemos a aumentar la cantidad en 1
-        if (folios.contains(productName.toLowerCase())) {
-          myItems.forEach((element) {
-            if (element.folio.compareTo(productName) == 0)
-              element.cantidad += 1;
-          });
-        }
-        //caso contrario añadimos el nuevo elemento
-        else {
-          myItems.add(rowItem(
-            1,
-            productName,
-            25.0,
-          ));
-        }
+
+        productName = "";
+        producTxt.clear();
       }
-
-      productName = "";
-      producTxt.clear();
     }
-  }
-  // El boton cotizar ha desatado un evento
-  if (mKey == 3) {
-    print("Cotizando");
-    double total2 = 0;
+    // El boton cotizar ha desatado un evento
+    if (mKey == 3) {
+      print("Cotizando");
+      double total2 = 0;
 
-    for (var item in myItems) {
+      /*for (var item in myItems) {
       total2 += (item.cantidad * item.precioUnitario);
       print(item.cantidad);
+    }*/
+      print("Total linea 397:$total2");
     }
-    print("Total linea 397:$total2");
-  }
+  } else {}
 }

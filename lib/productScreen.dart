@@ -1,8 +1,10 @@
 import 'package:cotiza/operation.dart';
 import 'package:cotiza/productClass.dart';
+import 'package:cotiza/rowProduct.dart';
 import 'package:flutter/material.dart';
 import 'dialogs.dart';
 import 'headTable.dart';
+import 'homeScreen.dart';
 
 class productScreen extends StatefulWidget {
   double ancho, largo;
@@ -170,7 +172,8 @@ class boton extends StatelessWidget {
       //accion realizar
       onPressed: () async {
         if (mKey == 0) {
-          final action = await Dialogs.sDialog(context, text);
+          final action = await Dialogs.sDialog(
+              context: context, title: text, formKey: formKey, idScreen: 1);
           print(action);
         } else {
           final action = await Dialogs.addDialog(context, text, formKey);
@@ -178,126 +181,5 @@ class boton extends StatelessWidget {
         }
       },
     );
-  }
-}
-
-class rowProduct extends StatelessWidget {
-  Product product;
-  final formKey = GlobalKey<FormState>();
-
-  rowProduct({this.product});
-  @override
-  Widget build(BuildContext context) {
-    print("folio:" + product.folio + " id:" + product.id.toString());
-    return Container(
-        decoration: BoxDecoration(
-            border: Border(bottom: BorderSide(color: Colors.grey))),
-        child: Column(
-          children: [
-            InkWell(
-              splashColor: Colors.white,
-              onLongPress: () {
-                print(this.product.toMap());
-                final action = Dialogs.updateDialog(
-                    formKey: formKey,
-                    context: context,
-                    title: "Actualizar",
-                    product: this.product);
-              },
-              onTap: () {
-                print(this.product.folio);
-              },
-              child: Container(
-                height: 40,
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Container(
-                        height: 40,
-                        width: 70,
-                        //color: Colors.brown,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              height: 40,
-                              width: 70,
-                              //color: Colors.cyan,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  product.folio,
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 20),
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      Container(
-                        height: 40,
-                        width: 70,
-                        //color: Colors.lime,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              product.costo.toString(),
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 20),
-                            )
-                          ],
-                        ),
-                      ),
-                      Container(
-                        //color: Colors.amber,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                                height: 30,
-                                width: 70,
-                                //boton en el cual esta expresada la cantidad del articulo
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                                  child: Text(
-                                    product.descripcion,
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 20),
-                                  ),
-                                )),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        //color: Colors.amber,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                                height: 30,
-                                width: 70,
-                                //boton en el cual esta expresada la cantidad del articulo
-                                child: Center(
-                                  child: Text(
-                                    product.cantidad.toString(),
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 20),
-                                  ),
-                                )),
-                          ],
-                        ),
-                      ),
-                    ]),
-              ),
-            ),
-          ],
-        ));
   }
 }

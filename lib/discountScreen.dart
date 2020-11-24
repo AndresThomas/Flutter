@@ -170,7 +170,8 @@ class boton extends StatelessWidget {
       //accion realizar
       onPressed: () async {
         if (mKey == 0) {
-          final action = await Dialogs.sDialog(context, text);
+          final action = await Dialogs.sDialog(
+              context: context, title: text, formKey: formKey, idScreen: 2);
           print(action);
         } else {
           final action = await Dialogs.addDialog2(context, text, formKey);

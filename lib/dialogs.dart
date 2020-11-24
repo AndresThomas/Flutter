@@ -2,6 +2,7 @@ import 'package:cotiza/descuentoClass.dart';
 import 'package:cotiza/homeScreen.dart';
 import 'package:cotiza/productClass.dart';
 import 'package:cotiza/productScreen.dart';
+import 'package:cotiza/rowProduct.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
@@ -14,6 +15,9 @@ enum DialogAction {
   yes,
   no,
 }
+
+List<Product> productSelected = [];
+List<Descuento> descuentoSelected = [];
 
 class Dialogs {
   // Cuadro emergente con entrada de texto para
@@ -46,18 +50,18 @@ class Dialogs {
             ),
             actions: <Widget>[
               FlatButton(
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: () => Navigator.of(context).pop(DialogAction.no),
                 child: const Text("Cancelar"),
               ),
               RaisedButton(
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  Navigator.of(context).pop(DialogAction.yes);
                 },
                 child: const Text("Aceptar"),
               ),
               RaisedButton(
                 onPressed: () {
-                  handleButton(2);
+                  handleButton(mKey: 2);
                 },
                 child: const Text("Agregar"),
               ),
@@ -98,12 +102,12 @@ class Dialogs {
             ),
             actions: <Widget>[
               FlatButton(
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: () => Navigator.of(context).pop(DialogAction.no),
                 child: const Text("Cancelar"),
               ),
               RaisedButton(
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  Navigator.of(context).pop(DialogAction.yes);
                 },
                 child: const Text("Aceptar"),
               ),
@@ -135,12 +139,12 @@ class Dialogs {
             ),
             actions: <Widget>[
               FlatButton(
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: () => Navigator.of(context).pop(DialogAction.no),
                 child: const Text("Cancelar"),
               ),
               RaisedButton(
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  Navigator.of(context).pop(DialogAction.yes);
                 },
                 child: const Text("Aceptar"),
               ),
@@ -261,7 +265,7 @@ class Dialogs {
             ),
             actions: <Widget>[
               FlatButton(
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: () => Navigator.of(context).pop(DialogAction.no),
                 child: const Text("Cancelar"),
               ),
               RaisedButton(
@@ -276,7 +280,7 @@ class Dialogs {
                     Operation.insert(product);
                     state = true;
                   }
-                  Navigator.of(context).pop();
+                  Navigator.of(context).pop(DialogAction.yes);
                 },
                 child: const Text("Aceptar"),
               ),
@@ -372,7 +376,7 @@ class Dialogs {
             ),
             actions: <Widget>[
               FlatButton(
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: () => Navigator.of(context).pop(DialogAction.no),
                 child: const Text("Cancelar"),
               ),
               RaisedButton(
@@ -386,7 +390,7 @@ class Dialogs {
                     Operation.insert2(descuento);
                     state = true;
                   }
-                  Navigator.of(context).pop();
+                  Navigator.of(context).pop(DialogAction.yes);
                 },
                 child: const Text("Aceptar"),
               ),
@@ -414,10 +418,13 @@ class Dialogs {
     return action;
   }
 
-  static Future<DialogAction> sDialog(
+  static Future<DialogAction> sDialog({
     BuildContext context,
     String title,
-  ) async {
+    final GlobalKey<FormState> formKey,
+    int idScreen,
+  }) async {
+    var search = TextEditingController();
     final action = await showDialog(
         context: context,
         barrierDismissible: false,
@@ -427,29 +434,65 @@ class Dialogs {
               borderRadius: BorderRadius.circular(10),
             ),
             title: Text(title), //titulo dinamico: buscar o agregar
-            content: TextField(
-              controller: producTxt,
-              maxLength: 10,
-              style: TextStyle(
-                color: Colors.black,
+            content: Form(
+              key: formKey,
+              child: TextFormField(
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return "ingrese un folio";
+                  }
+                  return null;
+                },
+                controller: search,
+                maxLength: 10,
+                style: TextStyle(
+                  color: Colors.black,
+                ),
+                decoration: InputDecoration(
+                    hintText: title,
+                    hintStyle: TextStyle(
+                      color: Colors.black,
+                    ),
+                    alignLabelWithHint: true),
               ),
-              decoration: InputDecoration(
-                  hintText: title,
-                  hintStyle: TextStyle(
-                    color: Colors.black,
-                  ),
-                  alignLabelWithHint: true),
             ),
             actions: <Widget>[
               FlatButton(
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: () => Navigator.of(context).pop(DialogAction.no),
                 child: const Text("Cancelar"),
               ),
               RaisedButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  Operation.clean();
-                  Operation.clean2();
+                onPressed: () async {
+                  List<dynamic> item;
+                  if (formKey.currentState.validate()) {
+                    if (search.text.compareTo("cleanDataBase") == 0) {
+                      Operation.clean();
+                      Operation.clean2();
+                    } else {
+                      item = await Operation.search(search.text, idScreen);
+                      //{0:[instance of class],1:idScreen}
+                      //return item;
+                    }
+
+                    if (item[1] == 2) {
+                      print("search descuento");
+                      List<Descuento> item;
+                      item.forEach((element) {
+                        item.add(element);
+                      });
+                      //listDialogDescount(item,context);
+                    } else {
+                      print("Search producto");
+                      var action = listDialog(
+                          item: item[0],
+                          context: context,
+                          idScreen: idScreen,
+                          typeView: 3);
+                      if (action == DialogAction.yes) {
+                        Navigator.of(context).pop(DialogAction.yes);
+                      }
+                    }
+                  }
                 },
                 child: const Text("Aceptar"),
               ),
@@ -457,6 +500,102 @@ class Dialogs {
           );
         });
     return (action != null) ? action : DialogAction.no;
+  }
+
+  static Future<DialogAction> listDialog(
+      {List<Product> item,
+      BuildContext context,
+      int idScreen,
+      int typeView}) async {
+    print("map:" + item.asMap().toString());
+    var action = await showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            title: Text("Seleccion"), //titulo dinamico: buscar o agregar
+            content: ListView.builder(
+                itemCount: item.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Container(
+                      //color: Colors.transparent,
+                      width: 200,
+                      child: Column(
+                        children: [
+                          rowProduct(
+                            product: item[index],
+                            sizeContainer: 200,
+                            size2: 45,
+                            windowKey: idScreen,
+                            typeView: typeView,
+                            fontColor: Colors.black,
+                          ),
+                        ],
+                      ));
+                }),
+            actions: [
+              FlatButton(
+                onPressed: () => Navigator.of(context).pop(DialogAction.no),
+                child: const Text("Cancelar"),
+              ),
+              RaisedButton(
+                onPressed: () {
+                  Navigator.of(context).pop(DialogAction.yes);
+                },
+                child: const Text("Aceptar"),
+              ),
+            ],
+          );
+        });
+    return action;
+  }
+
+  static Future<DialogAction> detailDialog(
+      {Product product, BuildContext context}) async {
+    print("map:" + product.toMap().toString());
+    var action = await showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Detalles"),
+            content: Container(
+              //color: Colors.blue,
+              height: 100,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Folio: " + product.folio,
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  Text("Descripcion: " + product.descripcion,
+                      style: TextStyle(fontSize: 20)),
+                  Text("Costo: " + product.costo.toString(),
+                      style: TextStyle(fontSize: 20)),
+                  Text("En existencia:" + product.cantidad.toString(),
+                      style: TextStyle(fontSize: 20)),
+                ],
+              ),
+            ),
+            actions: [
+              FlatButton(
+                onPressed: () => Navigator.of(context).pop(DialogAction.no),
+                child: const Text("Cancelar"),
+              ),
+              RaisedButton(
+                onPressed: () {
+                  print("close details");
+                  Navigator.of(context).pop(DialogAction.yes);
+                },
+                child: const Text("Aceptar"),
+              ),
+            ],
+          );
+        });
   }
 
   static Future<DialogAction> updateDialog(
@@ -578,7 +717,7 @@ class Dialogs {
             ),
             actions: <Widget>[
               FlatButton(
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: () => Navigator.of(context).pop(DialogAction.no),
                 child: const Text("Cancelar"),
               ),
               RaisedButton(
@@ -592,7 +731,7 @@ class Dialogs {
                     Operation.update(product);
                     state = true;
                   }
-                  Navigator.of(context).pop();
+                  Navigator.of(context).pop(DialogAction.yes);
                 },
                 child: const Text("Aceptar"),
               ),

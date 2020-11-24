@@ -60,6 +60,39 @@ class Operation {
     return database.delete("descuento");
   }
 
+  static Future<List<dynamic>> search(String search, int idScreen) async {
+    Database database = await openDB();
+    if (idScreen == 2) {
+      final List<Map<String, dynamic>> results = await database
+          .query("descuentos", where: 'descuento = ?', whereArgs: [search]);
+      return [
+        List.generate(
+            results.length,
+            (i) => Descuento(
+                  id: results[i]['id'],
+                  descuento: results[i]['descuento'],
+                  valor: results[i]['valor'],
+                )),
+        idScreen
+      ];
+    } else {
+      final List<Map<String, dynamic>> results = await database
+          .query("productos", where: 'folio = ?', whereArgs: [search]);
+
+      return [
+        List.generate(
+            results.length,
+            (i) => Product(
+                id: results[i]['id'],
+                cantidad: results[i]['cantidad'],
+                costo: results[i]['costo'],
+                descripcion: results[i]['descripcion'],
+                folio: results[i]['folio'])),
+        idScreen
+      ];
+    }
+  }
+
   static Future<List<Product>> getProducts() async {
     Database database = await openDB();
     final List<Map<String, dynamic>> results =
